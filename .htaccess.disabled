@@ -1,3 +1,9 @@
 RewriteEngine on
 RewriteCond %{HTTP_USER_AGENT} ^.*(bot|spider|crawl|https?://|WhatsApp|SkypeUriPreview|facebookexternalhit) [NC]
 RewriteRule .* - [R=403,L]
+
+# Clear fbclid= parameter in a URL. Otherwise, it gives an error on the visits from facebook.
+RewriteBase /
+RewriteCond %{QUERY_STRING} ^(.*)(?:^|&)fbclid=(?:[^&]*)((?:&|$).*)$ [NC]
+RewriteCond %1%2 (^|&)([^&].*|$)
+RewriteRule ^(.*) /$1?%2 [R=301,L]
